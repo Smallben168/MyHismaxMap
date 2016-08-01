@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">我的e地圖</string>
+    <string name="action_settings">設定</string>
+    <string name="action_mymap">我的e地圖</string>
+    <string name="myfriendlist">我的朋友上線清單</string>
+    <string name="title_activity_maps">MyeMap</string>
+    <string name="open">打開</string>
+    <string name="write_external_storage_denied">沒有權限</string>
+    <string name="myposition">我的位置</string>
+    <string name="google_play_service_missing">沒有安裝 Google Play Service</string>
+</resources>
