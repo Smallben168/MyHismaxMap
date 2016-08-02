@@ -1,15 +1,20 @@
 package tw.com.hismax.test.myhismaxmap;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+//import android.support.design.widget.FloatingActionButton;
+//import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -25,6 +30,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -46,6 +54,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // 顯示目前與儲存位置的標記物件
     private Marker currentMarker;
 
+    //Ben : Float Menu
+    FloatingActionMenu materialDesignFAM;
+    FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +73,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // 建立Location請求物件
         configLocationRequest();
+
+        //====== 建立Menu =========
+        materialDesignFAM = (FloatingActionMenu) findViewById(R.id.material_design_android_floating_action_menu);
+
+        floatingActionButton1 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item1);
+        floatingActionButton2 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item2);
+        floatingActionButton3 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item3);
+
+        floatingActionButton1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //TODO something when floating action menu first item clicked
+                Toast.makeText(MapsActivity.this, "click menu1", Toast.LENGTH_SHORT).show();
+                }
+            });
+        floatingActionButton2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //TODO something when floating action menu first item clicked
+                Toast.makeText(MapsActivity.this, "click menu2", Toast.LENGTH_SHORT).show();
+            }
+        });
+        floatingActionButton3.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //TODO something when floating action menu first item clicked
+                Toast.makeText(MapsActivity.this, "click menu3", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
 
@@ -99,6 +137,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     //Ben: 移動地圖到參數指定的位置
+    private void moveInitMap(LatLng place) {
+        // 建立地圖攝影機的位置物件
+        CameraPosition cameraPosition =
+                new CameraPosition.Builder()
+                        .target(place)
+                        .zoom(15)
+                        .build();
+        // 使用動畫的效果移動地圖
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
     private void moveMap(LatLng place) {
         // 建立地圖攝影機的位置物件
         CameraPosition cameraPosition =
@@ -235,6 +283,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .addApi(LocationServices.API)
                 .build();
     }
+
     // 建立Location請求物件
     private void configLocationRequest() {
         locationRequest = new LocationRequest();
@@ -245,6 +294,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // 設定優先讀取高精確度的位置資訊（GPS）
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
+
     //Ben: 讀取與處理定位設備授權請求
     private void requestLocationPermission() {
 
