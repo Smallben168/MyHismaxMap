@@ -86,6 +86,8 @@
         android:textOn="@string/lbl_on"
         android:id="@+id/switch_real_posit"
         android:layout_marginBottom="31dp"
-        android:layout_marginRight="11dp"
+        android:layout_marginRight="51dp"
         android:layout_gravity="center_horizontal|bottom" />
+
+
 </FrameLayout>

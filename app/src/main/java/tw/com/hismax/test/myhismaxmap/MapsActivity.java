@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionMenu;
@@ -55,15 +56,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Location currentLocation;
     private LatLng currentLatLng;
 
+    // 記錄 zoom 數值
+    private float mapZoom = 15.0F;
+
     // 顯示目前與儲存位置的標記物件
     private Marker currentMarker;
 
+    
     //Ben : Float Menu
     FloatingActionMenu materialDesignFAM;
     FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
 
     //元件宣告
     private Switch swRealPosit;
+    private TextView txtView_Map_Zoom;
 
     //變數宣告
     private Boolean mRealPosit = true;
@@ -115,6 +121,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+
+
+
+
     }
 
     /**
@@ -148,25 +158,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             googleApiClient.connect();
         }
 
+        //Ben : Add Event 加入 mouse click
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                addMarker(latLng, "Title", "is here !!");
+            }
+        });
+
+        //Ben : 加入 zoom 之偵測
+        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
+
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+                mapZoom = cameraPosition.zoom;
+            }
+        });
     }
 
     //Ben: 移動地圖到參數指定的位置
-    private void moveInitMap(LatLng place) {
-        // 建立地圖攝影機的位置物件
-        CameraPosition cameraPosition =
-                new CameraPosition.Builder()
-                        .target(place)
-                        .zoom(15)
-                        .build();
-        // 使用動畫的效果移動地圖
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-    }
     private void moveMap(LatLng place) {
         // 建立地圖攝影機的位置物件
         CameraPosition cameraPosition =
                 new CameraPosition.Builder()
                         .target(place)
-                        .zoom(15)
+                        .zoom(mapZoom)
                         .build();
         // 使用動畫的效果移動地圖
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -174,8 +190,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //Ben: 在地圖加入指定位置與標題的標記
     private void addMarker(LatLng place, String title, String context) {
+        //R.mipmap.ic_launcher
         BitmapDescriptor icon =
-                BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher);
+                BitmapDescriptorFactory.fromResource(R.mipmap.ic_person_pin_black_48dp);
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(place)
                 .title(title)
