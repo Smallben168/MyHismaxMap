@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Snackbar.make(view, R.string.myposition, Snackbar.LENGTH_LONG)
+                    Snackbar.make(view, R.string.lbl_my_position, Snackbar.LENGTH_LONG)
                             .setAction(R.string.open, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {

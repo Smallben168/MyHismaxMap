@@ -12,6 +12,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionMenu;
@@ -58,15 +60,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     FloatingActionMenu materialDesignFAM;
     FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
 
+    //元件宣告
+    private Switch swRealPosit;
+
+    //變數宣告
+    private Boolean mRealPosit = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
 
+        initProc();
 
         //Ben: 建立Google API用戶端物件
         configGoogleApiClient();
@@ -74,34 +78,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // 建立Location請求物件
         configLocationRequest();
 
+    }
+
+    private void initProc(){
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
         //====== 建立Menu =========
         materialDesignFAM = (FloatingActionMenu) findViewById(R.id.material_design_android_floating_action_menu);
 
         floatingActionButton1 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item1);
         floatingActionButton2 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item2);
         floatingActionButton3 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item3);
+        floatingActionButton1.setOnClickListener(new ClickMenuButton());
+        floatingActionButton2.setOnClickListener(new ClickMenuButton());
+        floatingActionButton3.setOnClickListener(new ClickMenuButton());
 
-        floatingActionButton1.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //TODO something when floating action menu first item clicked
-                Toast.makeText(MapsActivity.this, "click menu1", Toast.LENGTH_SHORT).show();
+        //Ben ------- 元件宣告
+        swRealPosit = (Switch) findViewById(R.id.switch_real_posit);
+        swRealPosit.setChecked(mRealPosit);
+        swRealPosit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                // TODO Auto-generated method stub
+                if (isChecked) {
+                    mRealPosit = true;
+                } else {
+                    mRealPosit = false;
                 }
-            });
-        floatingActionButton2.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //TODO something when floating action menu first item clicked
-                Toast.makeText(MapsActivity.this, "click menu2", Toast.LENGTH_SHORT).show();
-            }
-        });
-        floatingActionButton3.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //TODO something when floating action menu first item clicked
-                Toast.makeText(MapsActivity.this, "click menu3", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
-
 
     /**
      * Manipulates the map once available.
@@ -272,8 +282,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         else {
             currentMarker.setPosition(latLng);
         }
-        // 移動地圖到目前的位置
-        moveMap(latLng);
+
+        if (mRealPosit)
+            // 移動地圖到目前的位置
+            moveMap(latLng);
     }
 
     private synchronized void configGoogleApiClient() {
@@ -322,4 +334,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //processLocation();
         return;
     }
+
+    class ClickMenuButton implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+
+            //Toast.makeText(Menu.this, "onClick-"+view.getId(), Toast.LENGTH_SHORT).show();
+            switch (view.getId()) {
+                case R.id.material_design_floating_action_menu_item1: {
+                    Toast.makeText(MapsActivity.this, "click menu1", Toast.LENGTH_SHORT).show();
+                    //Intent it = new Intent();
+                    //it.setClass(Menu.this, Logout.class);
+                    //startActivity(it);
+                    //Menu.this.finish();
+                    break;
+                }
+                case R.id.material_design_floating_action_menu_item2: {
+                    Toast.makeText(MapsActivity.this, "click menu2", Toast.LENGTH_SHORT).show();
+                    //Intent it = new Intent();
+                    //it.setClass(Menu.this, Web_list.class);
+                    //startActivity(it);
+                    //Menu.this.finish();
+                    break;
+
+                }
+                case R.id.material_design_floating_action_menu_item3: {
+                    Toast.makeText(MapsActivity.this, "click menu3", Toast.LENGTH_SHORT).show();
+                    //Intent it = new Intent();
+                    //it.setClass(Menu.this, Web_list.class);
+                    //startActivity(it);
+                    //Menu.this.finish();
+                    break;
+
+                }
+
+            }
+        }
+    }        // class ClickMenuButton end
 }
