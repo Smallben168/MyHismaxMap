@@ -84,9 +84,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void initProc(){
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        //=======- Map ========
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        
         //====== 建立Menu =========
         materialDesignFAM = (FloatingActionMenu) findViewById(R.id.material_design_android_floating_action_menu);
 
