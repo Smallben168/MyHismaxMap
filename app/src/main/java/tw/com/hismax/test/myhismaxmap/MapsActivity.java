@@ -53,6 +53,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationRequest locationRequest;
     // 記錄目前最新的位置
     private Location currentLocation;
+    private LatLng currentLatLng;
+
     // 顯示目前與儲存位置的標記物件
     private Marker currentMarker;
 
@@ -273,19 +275,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // 位置改變
         // Location參數是目前的位置
         currentLocation = location;
-        LatLng latLng = new LatLng(
+        currentLatLng = new LatLng(
                 location.getLatitude(), location.getLongitude());
         // 設定目前位置的標記
         if (currentMarker == null) {
-            currentMarker = mMap.addMarker(new MarkerOptions().position(latLng));
+            currentMarker = mMap.addMarker(new MarkerOptions().position(currentLatLng));
         }
         else {
-            currentMarker.setPosition(latLng);
+            currentMarker.setPosition(currentLatLng);
         }
 
         if (mRealPosit)
             // 移動地圖到目前的位置
-            moveMap(latLng);
+            moveMap(currentLatLng);
     }
 
     private synchronized void configGoogleApiClient() {
@@ -342,7 +344,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //Toast.makeText(Menu.this, "onClick-"+view.getId(), Toast.LENGTH_SHORT).show();
             switch (view.getId()) {
                 case R.id.material_design_floating_action_menu_item1: {
-                    Toast.makeText(MapsActivity.this, "click menu1", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MapsActivity.this, R.string.menu_send_msg, Toast.LENGTH_SHORT).show();
                     //Intent it = new Intent();
                     //it.setClass(Menu.this, Logout.class);
                     //startActivity(it);
@@ -350,7 +352,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     break;
                 }
                 case R.id.material_design_floating_action_menu_item2: {
-                    Toast.makeText(MapsActivity.this, "click menu2", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MapsActivity.this, R.string.menu_find_address, Toast.LENGTH_SHORT).show();
                     //Intent it = new Intent();
                     //it.setClass(Menu.this, Web_list.class);
                     //startActivity(it);
@@ -359,11 +361,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 }
                 case R.id.material_design_floating_action_menu_item3: {
-                    Toast.makeText(MapsActivity.this, "click menu3", Toast.LENGTH_SHORT).show();
-                    //Intent it = new Intent();
-                    //it.setClass(Menu.this, Web_list.class);
-                    //startActivity(it);
-                    //Menu.this.finish();
+                    Toast.makeText(MapsActivity.this, R.string.menu_current_posit, Toast.LENGTH_SHORT).show();
+                    moveMap(MapsActivity.this.currentLatLng);
                     break;
 
                 }
