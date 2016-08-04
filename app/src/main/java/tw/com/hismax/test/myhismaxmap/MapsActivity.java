@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,7 +70,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //元件宣告
     private Switch swRealPosit;
-    private TextView txtView_Map_Zoom;
+    private ImageButton imgbut_change_map_Type;
+
 
     //變數宣告
     private Boolean mRealPosit = true;
@@ -120,8 +122,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
+        imgbut_change_map_Type = (ImageButton) findViewById(R.id.imgbut_change_map_Type);
+        imgbut_change_map_Type.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (mMap.getMapType()) {
+                    case GoogleMap.MAP_TYPE_NORMAL:
+                        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                        break;
+                    case GoogleMap.MAP_TYPE_HYBRID:
+                        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                        break;
+                    case GoogleMap.MAP_TYPE_SATELLITE:
+                        mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                        break;
+                    case GoogleMap.MAP_TYPE_TERRAIN:
+                        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                        break;
+                    default:
+                        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                }
 
-
+            }
+        });
 
 
 
@@ -158,7 +181,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             googleApiClient.connect();
         }
 
-        //Ben : Add Event 加入 mouse click
+        //Ben : 在onMapReady(GoogleMap googleMap)中 Add Event 加入 mouse click
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -166,7 +189,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        //Ben : 加入 zoom 之偵測
+        //Ben :在onMapReady(GoogleMap googleMap)中 加入 zoom 之偵測
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
 
             @Override
@@ -174,6 +197,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mapZoom = cameraPosition.zoom;
             }
         });
+
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     }
 
     //Ben: 移動地圖到參數指定的位置
@@ -236,9 +261,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // 啟動位置更新服務
         // 位置資訊更新的時候，應用程式會自動呼叫LocationListener.onLocationChanged
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //Ben: 檢查定位權限
+            //Ben: 檢查定位權限 -> 己搬至前面
             requestLocationPermission();
         }
+        //Ben : 未授權前執行此行會當掉
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, MapsActivity.this);
     }
     @Override
@@ -257,6 +283,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // 啟動地圖與定位元件
                 //processLocation();
+
             }
             // 如果在授權請求選擇「拒絕」
             else {

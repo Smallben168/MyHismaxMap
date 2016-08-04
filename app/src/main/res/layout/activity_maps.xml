@@ -89,5 +89,14 @@
         android:layout_marginRight="51dp"
         android:layout_gravity="center_horizontal|bottom" />
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imgbut_change_map_Type"
+        android:layout_marginBottom="31dp"
+        android:layout_marginRight="21dp"
+        android:layout_gravity="left|bottom"
+        android:src="@drawable/ic_remove_red_eye_black_18dp" />
+
 
 </FrameLayout>
