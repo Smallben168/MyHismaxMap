@@ -18,8 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="11dp"
-        android:layout_marginLeft="11dp"
+        android:layout_marginBottom="51dp"
         android:layout_marginRight="11dp"
         fab:menu_animationDelayPerItem="55"
         fab:menu_backgroundColor="@android:color/transparent"
@@ -51,7 +50,7 @@
         fab:menu_shadowXOffset="1dp"
         fab:menu_shadowYOffset="4dp"
         fab:menu_showShadow="true"
-        android:layout_gravity="right|bottom">
+        android:layout_gravity="bottom|right">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/material_design_floating_action_menu_item1"
@@ -85,18 +84,18 @@
         android:textOff="@string/lbl_off"
         android:textOn="@string/lbl_on"
         android:id="@+id/switch_real_posit"
-        android:layout_marginBottom="31dp"
-        android:layout_marginRight="51dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="60dp"
         android:layout_gravity="center_horizontal|bottom" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imgbut_change_map_Type"
-        android:layout_marginBottom="31dp"
-        android:layout_marginRight="21dp"
-        android:layout_gravity="left|bottom"
-        android:src="@drawable/ic_remove_red_eye_black_18dp" />
+        android:layout_marginBottom="5dp"
+        android:layout_gravity="center_horizontal|bottom|right"
+        android:src="@drawable/ic_remove_red_eye_black_18dp"
+        android:layout_marginRight="100dp" />
 
 
 </FrameLayout>

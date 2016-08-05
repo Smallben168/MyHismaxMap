@@ -1,5 +1,6 @@
 package tw.com.hismax.test.myhismaxmap;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -20,10 +21,14 @@ import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -32,11 +37,13 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.google.maps.android.SphericalUtil;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -56,6 +63,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // 記錄目前最新的位置
     private Location currentLocation;
     private LatLng currentLatLng;
+    private LatLngBounds BOUNDS_MOUNTAIN_VIEW;
+
 
     // 記錄 zoom 數值
     private float mapZoom = 15.0F;
@@ -75,6 +84,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //變數宣告
     private Boolean mRealPosit = true;
+
+    //for Map PlacePicker
+    private static final int PLACE_PICKER_REQUEST = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +119,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         floatingActionButton1.setOnClickListener(new ClickMenuButton());
         floatingActionButton2.setOnClickListener(new ClickMenuButton());
         floatingActionButton3.setOnClickListener(new ClickMenuButton());
+
 
         //Ben ------- 元件宣告
         swRealPosit = (Switch) findViewById(R.id.switch_real_posit);
@@ -185,7 +199,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                addMarker(latLng, "Title", "is here !!");
+                addMarker(latLng, "Title", "i am here !!");
             }
         });
 
@@ -403,6 +417,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     //it.setClass(Menu.this, Web_list.class);
                     //startActivity(it);
                     //Menu.this.finish();
+
+                    //Ben : Check
+                    BOUNDS_MOUNTAIN_VIEW = toBounds(MapsActivity.this.currentLatLng, 0.5);
+
+                    try {
+                        PlacePicker.IntentBuilder intentBuilder =
+                                        new PlacePicker.IntentBuilder();
+                                intentBuilder.setLatLngBounds(BOUNDS_MOUNTAIN_VIEW);
+                                Intent intent = intentBuilder.build(MapsActivity.this);
+                                startActivityForResult(intent, PLACE_PICKER_REQUEST);
+
+                    } catch (GooglePlayServicesRepairableException
+                                    | GooglePlayServicesNotAvailableException e) {
+                                e.printStackTrace();
+                    }
+
+
                     break;
 
                 }
@@ -414,6 +445,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
 
             }
+            //Ben : close menu
+            MapsActivity.this.materialDesignFAM.close(true);
         }
     }        // class ClickMenuButton end
+    @Override
+    protected void onActivityResult(int requestCode,
+                                    int resultCode, Intent data) {
+
+        if (requestCode == PLACE_PICKER_REQUEST
+                && resultCode == Activity.RESULT_OK) {
+
+            final Place place = PlacePicker.getPlace(this, data);
+            final CharSequence name = place.getName();
+            final CharSequence address = place.getAddress();
+            String attributions = (String) place.getAttributions();
+            if (attributions == null) {
+                attributions = "";
+            }
+
+            //mName.setText(name);
+            //mAddress.setText(address);
+            //mAttributions.setText(Html.fromHtml(attributions));
+
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+    //Ben : 計算 西南，東北經緯度
+    public LatLngBounds toBounds(LatLng center, double radius) {
+        LatLng southwest = SphericalUtil.computeOffset(center, radius * Math.sqrt(2.0), 225);
+        LatLng northeast = SphericalUtil.computeOffset(center, radius * Math.sqrt(2.0), 45);
+        return new LatLngBounds(southwest, northeast);
+    }
 }
